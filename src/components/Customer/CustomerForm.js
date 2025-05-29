@@ -21,7 +21,7 @@ const CustomerForm = () => {
   useEffect(() => {
     if (id) {
       setLoading(true);
-      axios.get(`/api/customers/${id}`)
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/customers/${id}`)
         .then(res => {
           console.log('Fetched customer data:', res.data);   // Debug log
           setFormData({
@@ -52,12 +52,12 @@ const CustomerForm = () => {
     if (id) {
       // If ID exists, update customer
       console.log('Updating customer with id:', id);
-      await axios.put(`/api/customers/${id}`, formData);
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/customers/${id}`, formData);
       toast.success('Customer updated successfully');
     } else {
       // If no ID, create new customer
       console.log('Creating new customer');
-      await axios.post('/api/customers', formData);
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/customers`, formData);
       toast.success('Customer added successfully');
     }
     navigate('/customers');  // After success, go back to customer list
