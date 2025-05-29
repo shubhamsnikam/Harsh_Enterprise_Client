@@ -12,7 +12,7 @@ const NavigationBar = () => {
 
   const fetchTodayVisits = async () => {
     try {
-      const res = await axios.get('/api/visits/today');
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/visits/today`);
       setTodayVisits(res.data);
     } catch (error) {
       console.error(error);
