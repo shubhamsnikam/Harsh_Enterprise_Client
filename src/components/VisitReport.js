@@ -18,7 +18,7 @@ const VisitReport = () => {
 
   const fetchVisits = async () => {
     try {
-      const res = await axios.get('/api/visits');
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/visits`);
       setVisits(res.data);
       toast.success('Visit data loaded successfully');
     } catch (error) {
@@ -29,7 +29,7 @@ const VisitReport = () => {
 
   const fetchCustomers = async () => {
     try {
-      const res = await axios.get('/api/customers');
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/customers`);
       setAllCustomers(res.data);
     } catch (error) {
       console.error(error);
