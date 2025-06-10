@@ -8,12 +8,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const VisitReport = () => {
   const [visits, setVisits] = useState([]);
+  // Changed customerName default to empty string for search bar
   const [filter, setFilter] = useState({ startDate: '', endDate: '', customerName: '' });
-  const [allCustomers, setAllCustomers] = useState([]);
+  const [allCustomers, setAllCustomers] = useState([]); // Keep this if you still use allCustomers elsewhere or plan to add autocomplete
 
   useEffect(() => {
     fetchVisits();
-    fetchCustomers();
+    fetchCustomers(); // Still fetching all customers, but not directly used for dropdown anymore
   }, []);
 
   const fetchVisits = async () => {
@@ -46,9 +47,18 @@ const VisitReport = () => {
     const start = filter.startDate ? new Date(filter.startDate) : null;
     const end = filter.endDate ? new Date(filter.endDate) : null;
 
+    // Filter by date range
     if (start && visitDate < start) return false;
     if (end && visitDate > end) return false;
-    if (filter.customerName && visit.customerName !== filter.customerName) return false;
+
+    // Filter by customer name (case-insensitive partial match)
+    if (filter.customerName) {
+      const customerNameLower = visit.customerName.toLowerCase();
+      const filterCustomerNameLower = filter.customerName.toLowerCase();
+      if (!customerNameLower.includes(filterCustomerNameLower)) {
+        return false;
+      }
+    }
     return true;
   });
 
@@ -166,18 +176,13 @@ const VisitReport = () => {
             </Col>
             <Col md={3}>
               <Form.Label>Customer Name</Form.Label>
-              <Form.Select
+              <Form.Control
+                type="text" // Changed to text input for search bar
+                placeholder="Search customer name..." // Added a placeholder
                 name="customerName"
                 value={filter.customerName}
                 onChange={handleFilterChange}
-              >
-                <option value="">All Customers</option>
-                {allCustomers.map((cust) => (
-                  <option key={cust._id} value={cust.name}>
-                    {cust.name}
-                  </option>
-                ))}
-              </Form.Select>
+              />
             </Col>
             <Col md={3} className="d-flex align-items-end">
               <Button variant="danger" onClick={generatePDF} className="w-100">
@@ -197,7 +202,6 @@ const VisitReport = () => {
                 <th>Service Address</th>
                 <th>Next Visit Date</th>
                 <th>Visit Time</th>
-                <th>Payment Status</th>
                 <th>Visit Status</th>
               </tr>
             </thead>
@@ -220,7 +224,6 @@ const VisitReport = () => {
                       <td>{visit.serviceAddress}</td>
                       <td>{new Date(visit.nextVisitDate).toLocaleDateString('en-IN')}</td>
                       <td>{visit.visitTime}</td>
-                      <td>{visit.paymentStatus}</td>
                       <td>
                         <span
                           className={`badge ${isDone ? 'bg-success' : 'bg-warning text-dark'}`}

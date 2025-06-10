@@ -20,7 +20,7 @@ const InvoicePreview = forwardRef(({ visit = {}, invoiceNo = '' }, ref) => {
     <div ref={ref} className="p-4 bg-white" style={{ width: '800px', fontFamily: 'Arial', color: '#000' }}>
       <div className="text-center mb-4">
         <h3>Harsh Enterprise</h3>
-        <p>123 Service Lane, Industrial Area | +91-9876543210 | harsh@enterprise.com</p>
+        <p>Advi Peth, Vita, Maharashtra 415311 | +91-9881234005 </p>
         <hr />
       </div>
 
