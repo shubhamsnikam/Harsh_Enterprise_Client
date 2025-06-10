@@ -8,18 +8,18 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const VisitReport = () => {
   const [visits, setVisits] = useState([]);
-  // Changed customerName default to empty string for search bar
+
   const [filter, setFilter] = useState({ startDate: '', endDate: '', customerName: '' });
-  const [allCustomers, setAllCustomers] = useState([]); // Keep this if you still use allCustomers elsewhere or plan to add autocomplete
+  const [allCustomers, setAllCustomers] = useState([]); 
 
   useEffect(() => {
     fetchVisits();
-    fetchCustomers(); // Still fetching all customers, but not directly used for dropdown anymore
+    fetchCustomers(); 
   }, []);
 
   const fetchVisits = async () => {
     try {
-      const res = await axios.get('/api/visits');
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/visits`);
       setVisits(res.data);
       toast.success('Visit data loaded successfully');
     } catch (error) {
@@ -30,7 +30,7 @@ const VisitReport = () => {
 
   const fetchCustomers = async () => {
     try {
-      const res = await axios.get('/api/customers');
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/customers`);
       setAllCustomers(res.data);
     } catch (error) {
       console.error(error);
