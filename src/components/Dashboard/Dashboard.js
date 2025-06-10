@@ -10,25 +10,25 @@ const Dashboard = () => {
 
   useEffect(() => {
     // Fetch visits by date
-    fetch(`/api/visits/date/${date}`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/visits/date/${date}`)
       .then(res => res.json())
       .then(data => setVisits(data))
       .catch(err => console.error('Error fetching visits:', err));
 
     // Fetch today's count
-    fetch('/api/visits/today/count')
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/visits/today/count`)
       .then(res => res.json())
       .then(data => setTodayCount(data.count))
       .catch(err => console.error('Error fetching today visit count:', err));
 
     // Fetch upcoming count
-    fetch('/api/visits/upcoming/count')
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/visits/upcoming/count`)
       .then(res => res.json())
       .then(data => setUpcomingCount(data.count))
       .catch(err => console.error('Error fetching upcoming visit count:', err));
 
     // Fetch revenue
-    fetch('/api/visits/revenue/total')
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/visits/revenue/total`)
       .then(res => res.json())
       .then(data => setTotalRevenue(data.totalRevenue))
       .catch(err => console.error('Error fetching revenue:', err));
