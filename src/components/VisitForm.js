@@ -48,7 +48,7 @@ const VisitForm = ({ visitToEdit, onSave }) => {
 
   const fetchCustomers = async () => {
     try {
-      const res = await axios.get('/api/customers');
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/customers`);
       const options = res.data.map(c => ({ value: c.name, label: c.name }));
       setCustomers(options);
     } catch (error) {
@@ -70,10 +70,10 @@ const VisitForm = ({ visitToEdit, onSave }) => {
     e.preventDefault();
     try {
       if (visitToEdit) {
-        await axios.put(`/api/visits/${visitToEdit._id}`, formData);
+        await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/visits/${visitToEdit._id}`, formData);
        toast.success('Visit updated successfully!');
       } else {
-        await axios.post('/api/visits', formData);
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/visits`, formData);
         toast.success('Visit created successfully!');
       }
       if (onSave) onSave();
