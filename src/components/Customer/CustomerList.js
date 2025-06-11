@@ -27,7 +27,7 @@ const CustomerList = () => {
 
     const fetchCustomers = async () => {
         try {
-            const res = await axios.get('/api/customers');
+            const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/customers`);
             setCustomers(res.data);
         } catch (error) {
             console.error('CustomerList: Failed to fetch customers:', error);
@@ -40,7 +40,7 @@ const CustomerList = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this customer?')) {
             try {
-                await axios.delete(`/api/customers/${id}`);
+                await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/customers/${id}`);
                 toast.success('Customer deleted');
                 fetchCustomers();
             } catch (error) {
