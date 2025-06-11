@@ -41,7 +41,7 @@ const CustomerForm = () => {
     useEffect(() => {
         if (id) {
             setLoading(true);
-            axios.get(`/api/customers/${id}`)
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/customers/${id}`)
                 .then(res => {
                     setFormData({
                         name: res.data.name || '',
@@ -78,10 +78,10 @@ const CustomerForm = () => {
 
         try {
             if (id) {
-                await axios.put(`/api/customers/${id}`, formData);
+                await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/customers/${id}`, formData);
                 toast.success('Customer updated successfully');
             } else {
-                await axios.post('/api/customers', formData);
+                await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/customers`, formData);
                 toast.success('Customer added successfully');
             }
             navigate('/customers'); // Navigate to customer list
