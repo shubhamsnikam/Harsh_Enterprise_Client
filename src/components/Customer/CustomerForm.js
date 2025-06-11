@@ -9,17 +9,15 @@ const CustomerForm = () => {
     const { id } = useParams(); // Get ID from URL
     const navigate = useNavigate();
 
-    // Helper to format date strings for input type="date"
     const formatDateForInput = (dateString) => {
         if (!dateString) return '';
         try {
             const date = new Date(dateString);
-            // Ensure date is valid before formatting
             if (isNaN(date.getTime())) {
                 console.warn('Invalid date string received:', dateString);
                 return '';
             }
-            return date.toISOString().split('T')[0]; // Gets YYYY-MM-DD
+            return date.toISOString().split('T')[0];
         } catch (error) {
             console.error('Error formatting date:', dateString, error);
             return '';
@@ -29,34 +27,32 @@ const CustomerForm = () => {
     const [formData, setFormData] = useState({
         name: '',
         mobile: '',
-        // email: '', // Removed
         address: '',
-        city: '', // Added city
-        billNumber: '', // Added billNumber
-        warrantyDateFrom: '', // Added warrantyDateFrom
-        warrantyDateTo: '', // Added warrantyDateTo
-        modelName: '', // Added modelName
+        city: '',
+        billNumber: '',
+        warrantyDateFrom: '',
+        warrantyDateTo: '',
+        modelName: '',
+        price: '' // ✅ New field
     });
 
     const [loading, setLoading] = useState(false);
 
-    // Fetch existing customer data if editing
     useEffect(() => {
         if (id) {
             setLoading(true);
-            axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/customers/${id}`)
+            axios.get(`/api/customers/${id}`)
                 .then(res => {
-                    console.log('Fetched customer data:', res.data); // Debug log
                     setFormData({
                         name: res.data.name || '',
                         mobile: res.data.mobile || '',
-                        // email: res.data.email || '', // Removed
                         address: res.data.address || '',
-                        city: res.data.city || '', // Populate city
-                        billNumber: res.data.billNumber || '', // Populate billNumber
-                        warrantyDateFrom: formatDateForInput(res.data.warrantyDateFrom), // Populate and format warrantyDateFrom
-                        warrantyDateTo: formatDateForInput(res.data.warrantyDateTo), // Populate and format warrantyDateTo
-                        modelName: res.data.modelName || '', // Populate modelName
+                        city: res.data.city || '',
+                        billNumber: res.data.billNumber || '',
+                        warrantyDateFrom: formatDateForInput(res.data.warrantyDateFrom),
+                        warrantyDateTo: formatDateForInput(res.data.warrantyDateTo),
+                        modelName: res.data.modelName || '',
+                        price: res.data.price || '' // ✅ Populate price
                     });
                     setLoading(false);
                 })
@@ -75,40 +71,37 @@ const CustomerForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Basic validation (can be expanded)
-        if (!formData.name || !formData.mobile || !formData.address || !formData.city || !formData.billNumber || !formData.modelName) {
-            toast.error('Please fill in all required fields: Name, Mobile, Address, City, Bill Number, Model Name.');
+        if (!formData.name || !formData.mobile || !formData.address || !formData.city || !formData.billNumber || !formData.modelName || !formData.price) {
+            toast.error('Please fill in all required fields including Price.');
             return;
         }
 
         try {
             if (id) {
-                // If ID exists, update customer
-                console.log('Updating customer with id:', id, formData);
-                await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/customers/${id}`, formData);
+                await axios.put(`/api/customers/${id}`, formData);
                 toast.success('Customer updated successfully');
             } else {
-                // If no ID, create new customer
-                console.log('Creating new customer', formData);
-                await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/customers`, formData);
+                await axios.post('/api/customers', formData);
                 toast.success('Customer added successfully');
             }
-            navigate('/customers'); // After success, go back to customer list
+            navigate('/customers'); // Navigate to customer list
         } catch (error) {
             console.error('Failed to save customer data:', error.response?.data || error.message);
             toast.error('Failed to save customer data');
         }
     };
 
-    if (loading) return (
-        <div className="text-center my-5">
-            <Spinner animation="border" role="status" />
-            <div>Loading customer data...</div>
-        </div>
-    );
+    if (loading) {
+        return (
+            <div className="text-center my-5">
+                <Spinner animation="border" role="status" />
+                <div>Loading customer data...</div>
+            </div>
+        );
+    }
 
     return (
-        <Card className="shadow-sm mt-4"> {/* Added some margin for better spacing */}
+        <Card className="shadow-sm mt-4">
             <Card.Body>
                 <h4>{id ? 'Edit Customer' : 'Add New Customer'}</h4>
                 <Form onSubmit={handleSubmit}>
@@ -135,20 +128,6 @@ const CustomerForm = () => {
                         />
                     </Form.Group>
 
-                    {/* Removed Email Field */}
-                    {/*
-                    <Form.Group className="mb-3" controlId="formEmail">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            type="email"
-                            placeholder="Enter email (optional)"
-                        />
-                    </Form.Group>
-                    */}
-
                     <Form.Group className="mb-3" controlId="formAddress">
                         <Form.Label>Address</Form.Label>
                         <Form.Control
@@ -156,7 +135,7 @@ const CustomerForm = () => {
                             value={formData.address}
                             onChange={handleChange}
                             required
-                            placeholder="Enter street address, building, etc."
+                            placeholder="Enter street address"
                         />
                     </Form.Group>
 
@@ -189,7 +168,19 @@ const CustomerForm = () => {
                             value={formData.modelName}
                             onChange={handleChange}
                             required
-                            placeholder="Enter model name of the product"
+                            placeholder="Enter product model name"
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formPrice">
+                        <Form.Label>Price</Form.Label>
+                        <Form.Control
+                            name="price"
+                            value={formData.price}
+                            onChange={handleChange}
+                            required
+                            type="number"
+                            placeholder="Enter price"
                         />
                     </Form.Group>
 
@@ -200,7 +191,6 @@ const CustomerForm = () => {
                             value={formData.warrantyDateFrom}
                             onChange={handleChange}
                             type="date"
-                            placeholder="Select start date of warranty"
                         />
                     </Form.Group>
 
@@ -211,7 +201,6 @@ const CustomerForm = () => {
                             value={formData.warrantyDateTo}
                             onChange={handleChange}
                             type="date"
-                            placeholder="Select end date of warranty"
                         />
                     </Form.Group>
 
