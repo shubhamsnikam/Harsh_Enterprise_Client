@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Table, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+
 
 const Dashboard = () => {
   const [visits, setVisits] = useState([]);
@@ -7,6 +9,8 @@ const Dashboard = () => {
   const [upcomingCount, setUpcomingCount] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch visits by date
@@ -48,14 +52,20 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
+
         <Col md={4}>
-          <Card className="shadow border-start border-4 border-warning">
+          <Card
+            className="shadow border-start border-4 border-warning"
+            onClick={() => navigate('/visits')}
+            style={{ cursor: 'pointer' }}
+          >
             <Card.Body>
               <Card.Title>Upcoming Visits</Card.Title>
               <h3 className="text-warning">{upcomingCount}</h3>
             </Card.Body>
           </Card>
         </Col>
+
         <Col md={4}>
           <Card className="shadow border-start border-4 border-info">
             <Card.Body>
@@ -80,6 +90,7 @@ const Dashboard = () => {
         </Col>
       </Row>
 
+
       {/* Visit Table */}
       <Row>
         <Col>
@@ -98,6 +109,7 @@ const Dashboard = () => {
                       <th>Status</th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {visits.map(visit => (
                       <tr key={visit._id}>
@@ -112,7 +124,6 @@ const Dashboard = () => {
                           </span>
                         </td>
                       </tr>
-
                     ))}
                   </tbody>
                 </Table>
