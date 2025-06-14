@@ -90,12 +90,13 @@ const CustomerList = () => {
                         <thead className="table-dark">
                             <tr>
                                 <th>#</th>
+                                <th>Invoice Date</th>
                                 <th>Name</th>
                                 <th>Mobile</th>
                                 <th>Bill Number</th>
                                 <th>Model</th>
-                                 <th>Price ₹</th> 
-                                  <th>Warranty (From - To)</th>
+                                <th>Price ₹</th>
+                                <th>Warranty (From - To)</th>
                                 <th>Address</th>
                                 <th>Actions</th>
                             </tr>
@@ -105,19 +106,18 @@ const CustomerList = () => {
                                 filteredCustomers.map((cust, index) => (
                                     <tr key={cust._id}>
                                         <td>{index + 1}</td>
+                                        <td>{formatDisplayDate(cust.invoiceDate)}</td>
                                         <td>{cust.name}</td>
                                         <td>{cust.mobile}</td>
                                         <td>{cust.billNumber || '-'}</td>
                                         <td>{cust.modelName || '-'}</td>
-                                        <td>{cust.price ? `₹${cust.price.toFixed(2)}` : '-'}</td> 
+                                        <td>{cust.price ? `₹${cust.price.toFixed(2)}` : '-'}</td>
                                         <td>
                                             {formatDisplayDate(cust.warrantyDateFrom)} - {formatDisplayDate(cust.warrantyDateTo)}
                                         </td>
-                                        
                                         <td>{cust.address || '-'}</td>
-                                        
                                         <td>
-                                            <Link to={`/edit-customer/${cust._id}`} className="btn btn-primary btn-sm me-2">
+                                            <Link to={`/edit-customer/${cust._id}`} className="btn btn-primary btn-sm me-2 mb-1">
                                                 Edit
                                             </Link>
                                             <Button variant="danger" size="sm" onClick={() => handleDelete(cust._id)}>
@@ -128,7 +128,7 @@ const CustomerList = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="9" className="text-muted">
+                                    <td colSpan="10" className="text-muted">
                                         {searchTerm ? 'No customers found matching your search.' : 'No customers found.'}
                                     </td>
                                 </tr>
